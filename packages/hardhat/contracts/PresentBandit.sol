@@ -40,6 +40,11 @@ contract PresentBandit {
     isPaid[msg.sender] = true;
   }
 
+  function movePlayer() public {
+    player[msg.sender] += 1;
+    playerTimeLeft[msg.sender] -= 1;
+  }
+
   modifier isOwner() {
     require(msg.sender == owner, "Not the Owner");
     _;

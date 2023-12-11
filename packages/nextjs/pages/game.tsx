@@ -54,6 +54,14 @@ const Game: NextPage = () => {
     },
   });
 
+  const { writeAsync: movePlayer, isLoading: moveLoading } = useScaffoldContractWrite({
+    contractName: "PresentBandit",
+    functionName: "movePlayer",
+    onBlockConfirmation: txnReceipt => {
+      console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+    },
+  });
+
   return (
     <>
       <MetaHeader />
@@ -75,9 +83,10 @@ const Game: NextPage = () => {
             {isPaid && (
               <button
                 className="py-2 px-16 mb-1 mt-3 mr-3 bg-green-500 rounded baseline hover:bg-green-300 disabled:opacity-50"
-                onClick={() => console.log("roll")}
+                onClick={() => movePlayer()}
+                disabled={moveLoading}
               >
-                Roll
+                Move
               </button>
             )}
             <div className="relative mt-10 bg-sky-400" style={{ width: "1000px", height: "600px" }}>
