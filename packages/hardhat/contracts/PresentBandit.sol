@@ -1,7 +1,11 @@
 //SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
 
+import "./PresentToken.sol";
+
 contract PresentBandit {
+  PresentToken public presentToken;
+
   address public immutable owner;
   Box[] public grid;
   mapping(address => uint256) public player;
@@ -12,9 +16,10 @@ contract PresentBandit {
     uint256 id;
     string typeGrid;
   }
-
-  constructor(address _owner) {
+  
+  constructor(address _owner, address _tokenAddress) {
     owner = _owner;
+    presentToken = PresentToken(_tokenAddress);
 
     grid.push(Box(0, "home"));
 
