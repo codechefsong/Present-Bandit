@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { MetaHeader } from "~~/components/MetaHeader";
+import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 
 const BOARD_STYLES = [
   "grid-1",
@@ -22,6 +23,37 @@ const BOARD_STYLES = [
 const Game: NextPage = () => {
   const { address } = useAccount();
 
+  const { data: gridData } = useScaffoldContractRead({
+    contractName: "PresentBandit",
+    functionName: "getGrid",
+  });
+
+  const { data: you } = useScaffoldContractRead({
+    contractName: "PresentBandit",
+    functionName: "player",
+    args: [address],
+  });
+
+  const { data: playerTimeLeft } = useScaffoldContractRead({
+    contractName: "PresentBandit",
+    functionName: "playerTimeLeft",
+    args: [address],
+  });
+
+  const { data: isPaid } = useScaffoldContractRead({
+    contractName: "PresentBandit",
+    functionName: "isPaid",
+    args: [address],
+  });
+
+  const { writeAsync: playGame, isLoading: playLoading } = useScaffoldContractWrite({
+    contractName: "PresentBandit",
+    functionName: "addPlayer",
+    onBlockConfirmation: txnReceipt => {
+      console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+    },
+  });
+
   return (
     <>
       <MetaHeader />
@@ -30,28 +62,35 @@ const Game: NextPage = () => {
           <div>
             <h2 className="mt-4 text-3xl">Board</h2>
             <p>{address}</p>
-            <button
-              className="py-2 px-16 mb-1 mt-3 mr-3 bg-green-500 rounded baseline hover:bg-green-300 disabled:opacity-50"
-              onClick={() => console.log("play")}
-            >
-              Play
-            </button>
-            <button
-              className="py-2 px-16 mb-1 mt-3 mr-3 bg-green-500 rounded baseline hover:bg-green-300 disabled:opacity-50"
-              onClick={() => console.log("roll")}
-            >
-              Roll
-            </button>
+            <p>{Number(playerTimeLeft)} Time Left</p>
+            {!isPaid && (
+              <button
+                className="py-2 px-16 mb-1 mt-3 mr-3 bg-green-500 rounded baseline hover:bg-green-300 disabled:opacity-50 w-[200px] ml-2"
+                onClick={() => playGame()}
+                disabled={playLoading}
+              >
+                {playLoading ? "Adding..." : "Play"}
+              </button>
+            )}
+            {isPaid && (
+              <button
+                className="py-2 px-16 mb-1 mt-3 mr-3 bg-green-500 rounded baseline hover:bg-green-300 disabled:opacity-50"
+                onClick={() => console.log("roll")}
+              >
+                Roll
+              </button>
+            )}
             <div className="relative mt-10 bg-sky-400" style={{ width: "1000px", height: "600px" }}>
-              {BOARD_STYLES &&
-                BOARD_STYLES.map((item, index) => (
+              {gridData &&
+                gridData.map((item, index) => (
                   <div
                     key={index}
                     className={
                       "w-20 h-20 border border-gray-300 font-bold bg-white" + " " + BOARD_STYLES[index] || "grid-1"
                     }
                   >
-                    {item}
+                    {item.typeGrid}
+                    {you?.toString() === item.id.toString() && <p>You</p>}
                   </div>
                 ))}
             </div>
