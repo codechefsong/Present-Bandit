@@ -21,6 +21,18 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
 
+  await deploy("ERC6551Registry", {
+    from: deployer,
+    log: true,
+    autoMine: true,
+  });
+
+  await deploy("ERC6551Account", {
+    from: deployer,
+    log: true,
+    autoMine: true,
+  });
+
   await deploy("PresentToken", {
     from: deployer,
     log: true,
