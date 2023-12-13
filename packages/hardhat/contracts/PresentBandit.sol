@@ -15,9 +15,13 @@ contract PresentBandit {
   mapping(address => uint256) public playerTimeLeft;
   mapping(address => bool) public isPaid;
 
+  // 0 - home
+  // 1 - finsh
+  // 2 - house
   struct Box {
     uint256 id;
     string typeGrid;
+    uint256 typeNum;
   }
   
   constructor(address _owner, address _registryAddress, address _tokenAddress) {
@@ -25,13 +29,14 @@ contract PresentBandit {
     registry = ERC6551Registry(_registryAddress);
     presentToken = PresentToken(_tokenAddress);
 
-    grid.push(Box(0, "home"));
+    grid.push(Box(0, "home", 0));
 
     for (uint256 id = 1; id < 13; id++) {
-      grid.push(Box(id, "empty"));
+      if (id == 2 || id == 5|| id == 8 || id == 10) grid.push(Box(id, "house", 2));
+      else grid.push(Box(id, "empty", 99));
     }
 
-    grid.push(Box(14, "finsh"));
+    grid.push(Box(14, "finsh", 1));
   }
 
   function getGrid() public view returns (Box[] memory){
@@ -61,6 +66,14 @@ contract PresentBandit {
     address tbaAddress = tbaList[msg.sender];
     player[tbaAddress] += 1;
     playerTimeLeft[tbaAddress] -= 1;
+  }
+
+  function stealPresent() public {
+    address tbaAddress = tbaList[msg.sender];
+    uint256 position = player[tbaAddress];
+    require(grid[position].typeNum == 2, "You cannot steal present at this place");
+
+    presentToken.mint(tbaAddress, 1 * 10 ** 18);
   }
 
   modifier isOwner() {

@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import { formatEther } from "viem";
 import { useAccount } from "wagmi";
 import { MetaHeader } from "~~/components/MetaHeader";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
@@ -52,6 +53,12 @@ const Game: NextPage = () => {
     args: [tbaAddress],
   });
 
+  const { data: presents } = useScaffoldContractRead({
+    contractName: "PresentToken",
+    functionName: "balanceOf",
+    args: [tbaAddress],
+  });
+
   const { writeAsync: playGame, isLoading: playLoading } = useScaffoldContractWrite({
     contractName: "PresentBandit",
     functionName: "addPlayer",
@@ -68,6 +75,14 @@ const Game: NextPage = () => {
     },
   });
 
+  const { writeAsync: stealPresent, isLoading: stealLoading } = useScaffoldContractWrite({
+    contractName: "PresentBandit",
+    functionName: "stealPresent",
+    onBlockConfirmation: txnReceipt => {
+      console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+    },
+  });
+
   return (
     <>
       <MetaHeader />
@@ -77,6 +92,7 @@ const Game: NextPage = () => {
             <h2 className="mt-4 text-3xl">Board</h2>
             <p>{tbaAddress}</p>
             <p>{Number(playerTimeLeft)} Time Left</p>
+            <p>{formatEther(presents || 0n)} Presents</p>
             {!isPaid && tbaAddress === "0x0000000000000000000000000000000000000000" && (
               <p className="text-red-600">You need a Fake Santa NFT to play</p>
             )}
@@ -96,6 +112,15 @@ const Game: NextPage = () => {
                 disabled={moveLoading}
               >
                 Move
+              </button>
+            )}
+            {isPaid && gridData && gridData[Number(you)]?.typeGrid === "house" && (
+              <button
+                className="py-2 px-16 mb-1 mt-3 mr-3 bg-green-500 rounded baseline hover:bg-green-300 disabled:opacity-50"
+                onClick={() => stealPresent()}
+                disabled={stealLoading}
+              >
+                Steal
               </button>
             )}
             <div className="relative mt-10 bg-sky-400" style={{ width: "1000px", height: "600px" }}>
