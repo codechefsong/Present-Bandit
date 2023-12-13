@@ -51,14 +51,16 @@ contract PresentBandit {
   }
 
   function addPlayer() public {
-    player[msg.sender] = 0;
-    playerTimeLeft[msg.sender] = 100;
-    isPaid[msg.sender] = true;
+    address tbaAddress = tbaList[msg.sender];
+    player[tbaAddress] = 0;
+    playerTimeLeft[tbaAddress] = 100;
+    isPaid[tbaAddress] = true;
   }
 
   function movePlayer() public {
-    player[msg.sender] += 1;
-    playerTimeLeft[msg.sender] -= 1;
+    address tbaAddress = tbaList[msg.sender];
+    player[tbaAddress] += 1;
+    playerTimeLeft[tbaAddress] -= 1;
   }
 
   modifier isOwner() {

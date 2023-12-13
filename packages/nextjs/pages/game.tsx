@@ -23,6 +23,12 @@ const BOARD_STYLES = [
 const Game: NextPage = () => {
   const { address } = useAccount();
 
+  const { data: tbaAddress } = useScaffoldContractRead({
+    contractName: "PresentBandit",
+    functionName: "tbaList",
+    args: [address],
+  });
+
   const { data: gridData } = useScaffoldContractRead({
     contractName: "PresentBandit",
     functionName: "getGrid",
@@ -31,19 +37,19 @@ const Game: NextPage = () => {
   const { data: you } = useScaffoldContractRead({
     contractName: "PresentBandit",
     functionName: "player",
-    args: [address],
+    args: [tbaAddress],
   });
 
   const { data: playerTimeLeft } = useScaffoldContractRead({
     contractName: "PresentBandit",
     functionName: "playerTimeLeft",
-    args: [address],
+    args: [tbaAddress],
   });
 
   const { data: isPaid } = useScaffoldContractRead({
     contractName: "PresentBandit",
     functionName: "isPaid",
-    args: [address],
+    args: [tbaAddress],
   });
 
   const { writeAsync: playGame, isLoading: playLoading } = useScaffoldContractWrite({
@@ -69,9 +75,12 @@ const Game: NextPage = () => {
         <div className="flex items-center flex-col flex-grow">
           <div>
             <h2 className="mt-4 text-3xl">Board</h2>
-            <p>{address}</p>
+            <p>{tbaAddress}</p>
             <p>{Number(playerTimeLeft)} Time Left</p>
-            {!isPaid && (
+            {!isPaid && tbaAddress === "0x0000000000000000000000000000000000000000" && (
+              <p className="text-red-600">You need a Fake Santa NFT to play</p>
+            )}
+            {!isPaid && tbaAddress !== "0x0000000000000000000000000000000000000000" && (
               <button
                 className="py-2 px-16 mb-1 mt-3 mr-3 bg-green-500 rounded baseline hover:bg-green-300 disabled:opacity-50 w-[200px] ml-2"
                 onClick={() => playGame()}
