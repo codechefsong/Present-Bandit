@@ -33,6 +33,12 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
     autoMine: true,
   });
 
+  await deploy("FakeSantaNFT", {
+    from: deployer,
+    log: true,
+    autoMine: true,
+  });
+
   await deploy("PresentToken", {
     from: deployer,
     log: true,
