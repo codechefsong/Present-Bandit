@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Image from "next/image";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 import deployedContracts from "~~/contracts/deployedContracts";
@@ -72,6 +73,8 @@ const Marketplace: NextPage = () => {
         <h1 className="text-center mb-5">
           <span className="block text-2xl mb-2">Buy a Fake Santa</span>
         </h1>
+
+        <Image className="mb-3" src="/santa.png" width={100} height={100} alt="Fake Santa" />
 
         <button
           className="py-2 px-16 mb-1 mt-3 bg-green-500 rounded baseline hover:bg-green-300 disabled:opacity-50"

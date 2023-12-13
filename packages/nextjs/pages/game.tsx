@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { NextPage } from "next";
 import { formatEther } from "viem";
 import { useAccount } from "wagmi";
@@ -133,7 +134,9 @@ const Game: NextPage = () => {
                     }
                   >
                     {item.typeGrid}
-                    {you?.toString() === item.id.toString() && <p>You</p>}
+                    {isPaid && you?.toString() === item.id.toString() && (
+                      <Image className="mb-3" src="/santa.png" width={50} height={50} alt="Fake Santa" />
+                    )}
                   </div>
                 ))}
             </div>
