@@ -1,13 +1,16 @@
 //SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
 
+import "./ERC6551Registry.sol";
 import "./PresentToken.sol";
 
 contract PresentBandit {
+  ERC6551Registry public registry;
   PresentToken public presentToken;
 
   address public immutable owner;
   Box[] public grid;
+  mapping(address => address) public tbaList;
   mapping(address => uint256) public player;
   mapping(address => uint256) public playerTimeLeft;
   mapping(address => bool) public isPaid;
@@ -17,8 +20,9 @@ contract PresentBandit {
     string typeGrid;
   }
   
-  constructor(address _owner, address _tokenAddress) {
+  constructor(address _owner, address _registryAddress, address _tokenAddress) {
     owner = _owner;
+    registry = ERC6551Registry(_registryAddress);
     presentToken = PresentToken(_tokenAddress);
 
     grid.push(Box(0, "home"));
@@ -32,6 +36,18 @@ contract PresentBandit {
 
   function getGrid() public view returns (Box[] memory){
     return grid;
+  }
+
+  function createTokenBoundAccount(
+    address _implementation,
+    uint256 _chainId,
+    address _tokenContract,
+    uint256 _tokenId,
+    uint256 _salt,
+    bytes calldata _initData
+  ) external {
+    address newTBA = registry.createAccount(_implementation, _chainId, _tokenContract, _tokenId, _salt, _initData);
+    tbaList[msg.sender] = newTBA;
   }
 
   function addPlayer() public {
