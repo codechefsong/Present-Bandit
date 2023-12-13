@@ -73,7 +73,15 @@ contract PresentBandit {
     uint256 position = player[tbaAddress];
     require(grid[position].typeNum == 2, "You cannot steal present at this place");
 
+    uint256 timeCost = randomNumber(15);
+
+    playerTimeLeft[tbaAddress] -= timeCost + 5;
+
     presentToken.mint(tbaAddress, 1 * 10 ** 18);
+  }
+  
+  function randomNumber(uint256 num) internal returns (uint256) {
+    return uint256(keccak256(abi.encode(block.timestamp, msg.sender))) % num;
   }
 
   modifier isOwner() {
