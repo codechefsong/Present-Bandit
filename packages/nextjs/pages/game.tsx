@@ -99,6 +99,14 @@ const Game: NextPage = () => {
     },
   });
 
+  const { writeAsync: dropPresent, isLoading: dropLoading } = useScaffoldContractWrite({
+    contractName: "PresentBandit",
+    functionName: "dropPresent",
+    onBlockConfirmation: txnReceipt => {
+      console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+    },
+  });
+
   useScaffoldEventSubscriber({
     contractName: "PresentBandit",
     eventName: "PlayEvent",
@@ -150,6 +158,15 @@ const Game: NextPage = () => {
                     disabled={stealLoading}
                   >
                     Steal
+                  </button>
+                )}
+                {isPaid && gridData && gridData[Number(you)]?.typeGrid === "house" && (
+                  <button
+                    className="py-2 px-16 mb-1 mt-3 mr-3 bg-green-500 rounded baseline hover:bg-green-300 disabled:opacity-50"
+                    onClick={() => dropPresent()}
+                    disabled={dropLoading}
+                  >
+                    Discard
                   </button>
                 )}
                 {isPaid && gridData && gridData[Number(you)]?.typeGrid === "event" && (

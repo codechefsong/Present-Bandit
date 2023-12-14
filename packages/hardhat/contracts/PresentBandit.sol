@@ -87,6 +87,16 @@ contract PresentBandit {
     playerWeight[tbaAddress] += 2;
   }
 
+  function dropPresent() public {
+    address tbaAddress = tbaList[msg.sender];
+    uint tokenAmount = presentToken.balanceOf(tbaAddress);
+
+    require(tokenAmount > 0, "You do not have any present");
+
+    presentToken.burn(tbaAddress, 1 * 10 ** 18);
+    playerWeight[tbaAddress] -= 2;
+  }
+
   function gameOver() public {
     address tbaAddress = tbaList[msg.sender];
 
