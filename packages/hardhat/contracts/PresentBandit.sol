@@ -79,8 +79,18 @@ contract PresentBandit {
 
     presentToken.mint(tbaAddress, 1 * 10 ** 18);
   }
+
+  function gameOver() public {
+    address tbaAddress = tbaList[msg.sender];
+
+    uint amount = presentToken.balanceOf(tbaAddress);
+
+    presentToken.mint(tbaAddress, amount * 10 ** 18);
+
+    isPaid[tbaAddress] = false;
+  }
   
-  function randomNumber(uint256 num) internal returns (uint256) {
+  function randomNumber(uint256 num) internal view returns (uint256) {
     return uint256(keccak256(abi.encode(block.timestamp, msg.sender))) % num;
   }
 

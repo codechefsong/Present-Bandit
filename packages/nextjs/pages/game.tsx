@@ -127,6 +127,15 @@ const Game: NextPage = () => {
                     Steal
                   </button>
                 )}
+                {isPaid && Number(playerTimeLeft) == 0 && (
+                  <button
+                    className="py-2 px-16 mb-1 mt-3 mr-3 bg-green-500 rounded baseline hover:bg-green-300 disabled:opacity-50"
+                    onClick={() => movePlayer()}
+                    disabled={moveLoading}
+                  >
+                    Start Over
+                  </button>
+                )}
               </div>
             </div>
             <div className="relative mt-2 bg-sky-400" style={{ width: "1000px", height: "600px" }}>
