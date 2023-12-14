@@ -15,9 +15,12 @@ contract PresentBandit {
   mapping(address => uint256) public playerTimeLeft;
   mapping(address => bool) public isPaid;
 
+  event PlayEvent(address player, address nft, string detail);
+
   // 0 - home
   // 1 - finsh
   // 2 - house
+  // 3 - event
   struct Box {
     uint256 id;
     string typeGrid;
@@ -33,6 +36,7 @@ contract PresentBandit {
 
     for (uint256 id = 1; id < 13; id++) {
       if (id == 2 || id == 5|| id == 8 || id == 10) grid.push(Box(id, "house", 2));
+      else if (id == 3 || id == 7 ) grid.push(Box(id, "event", 3));
       else grid.push(Box(id, "empty", 99));
     }
 
@@ -85,9 +89,37 @@ contract PresentBandit {
 
     uint amount = presentToken.balanceOf(tbaAddress);
 
-    presentToken.mint(tbaAddress, amount * 10 ** 18);
+    presentToken.burn(tbaAddress, amount * 10 ** 18);
 
     isPaid[tbaAddress] = false;
+  }
+
+  function randomEvent() public {
+    address tbaAddress = tbaList[msg.sender];
+
+    uint256 num = randomNumber(5);
+
+    if (num == 1) {
+      presentToken.mint(tbaAddress, 1 * 10 ** 18);
+      emit PlayEvent(msg.sender, tbaAddress, "You found a present");
+    }
+    else if (num == 2) {
+      uint amount = presentToken.balanceOf(tbaAddress);
+      if (amount > 0) {
+        presentToken.burn(tbaAddress, 1 * 10 ** 18);
+        emit PlayEvent(msg.sender, tbaAddress, "You lost a present");
+      }
+      else {
+        emit PlayEvent(msg.sender, tbaAddress, "Nothing happen");
+      }
+    }
+    else if (num == 3) {
+      playerTimeLeft[tbaAddress] -= 10;
+      emit PlayEvent(msg.sender, tbaAddress, "You were delay because of snow storm");
+    }
+    else {
+      emit PlayEvent(msg.sender, tbaAddress, "Nothing happen");
+    }
   }
   
   function randomNumber(uint256 num) internal view returns (uint256) {

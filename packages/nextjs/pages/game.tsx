@@ -3,7 +3,8 @@ import type { NextPage } from "next";
 import { formatEther } from "viem";
 import { useAccount } from "wagmi";
 import { MetaHeader } from "~~/components/MetaHeader";
-import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
+import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
+import { notification } from "~~/utils/scaffold-eth";
 
 const BOARD_STYLES = [
   "grid-1",
@@ -84,6 +85,23 @@ const Game: NextPage = () => {
     },
   });
 
+  const { writeAsync: randomEvent, isLoading: eventLoading } = useScaffoldContractWrite({
+    contractName: "PresentBandit",
+    functionName: "randomEvent",
+    onBlockConfirmation: txnReceipt => {
+      console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+    },
+  });
+
+  useScaffoldEventSubscriber({
+    contractName: "PresentBandit",
+    eventName: "PlayEvent",
+    listener: (data: any) => {
+      console.log(data);
+      notification.info(data[0].args.detail);
+    },
+  });
+
   return (
     <>
       <MetaHeader />
@@ -125,6 +143,15 @@ const Game: NextPage = () => {
                     disabled={stealLoading}
                   >
                     Steal
+                  </button>
+                )}
+                {isPaid && gridData && gridData[Number(you)]?.typeGrid === "event" && (
+                  <button
+                    className="py-2 px-16 mb-1 mt-3 mr-3 bg-green-500 rounded baseline hover:bg-green-300 disabled:opacity-50"
+                    onClick={() => randomEvent()}
+                    disabled={eventLoading}
+                  >
+                    Play Event
                   </button>
                 )}
                 {isPaid && Number(playerTimeLeft) == 0 && (
