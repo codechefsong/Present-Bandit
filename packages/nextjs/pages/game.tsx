@@ -87,44 +87,49 @@ const Game: NextPage = () => {
   return (
     <>
       <MetaHeader />
-      <div className="ml-6">
+      <div className="mt-2">
         <div className="flex items-center flex-col flex-grow">
           <div>
-            <h2 className="mt-4 text-3xl">Board</h2>
-            <p>{tbaAddress}</p>
-            <p>{Number(playerTimeLeft)} Time Left</p>
-            <p>{formatEther(presents || 0n)} Presents</p>
-            {!isPaid && tbaAddress === "0x0000000000000000000000000000000000000000" && (
-              <p className="text-red-600">You need a Fake Santa NFT to play</p>
-            )}
-            {!isPaid && tbaAddress !== "0x0000000000000000000000000000000000000000" && (
-              <button
-                className="py-2 px-16 mb-1 mt-3 mr-3 bg-green-500 rounded baseline hover:bg-green-300 disabled:opacity-50 w-[200px] ml-2"
-                onClick={() => playGame()}
-                disabled={playLoading}
-              >
-                {playLoading ? "Adding..." : "Play"}
-              </button>
-            )}
-            {isPaid && (
-              <button
-                className="py-2 px-16 mb-1 mt-3 mr-3 bg-green-500 rounded baseline hover:bg-green-300 disabled:opacity-50"
-                onClick={() => movePlayer()}
-                disabled={moveLoading}
-              >
-                Move
-              </button>
-            )}
-            {isPaid && gridData && gridData[Number(you)]?.typeGrid === "house" && (
-              <button
-                className="py-2 px-16 mb-1 mt-3 mr-3 bg-green-500 rounded baseline hover:bg-green-300 disabled:opacity-50"
-                onClick={() => stealPresent()}
-                disabled={stealLoading}
-              >
-                Steal
-              </button>
-            )}
-            <div className="relative mt-10 bg-sky-400" style={{ width: "1000px", height: "600px" }}>
+            <div className="grid lg:grid-cols-2 flex-grow gap-3">
+              <div className="rounded overflow-hidden shadow-lg bg-white px-3">
+                <p>{tbaAddress}</p>
+                <p>{Number(playerTimeLeft)} Time Left</p>
+                <p>{formatEther(presents || 0n)} Presents</p>
+              </div>
+              <div className="flex flex-col items-center justify-center rounded overflow-hidden shadow-lg bg-white">
+                {!isPaid && tbaAddress === "0x0000000000000000000000000000000000000000" && (
+                  <p className="text-red-600">You need a Fake Santa NFT to play</p>
+                )}
+                {!isPaid && tbaAddress !== "0x0000000000000000000000000000000000000000" && (
+                  <button
+                    className="py-2 px-16 mb-1 mt-3 mr-3 bg-green-500 rounded baseline hover:bg-green-300 disabled:opacity-50 w-[200px] ml-2"
+                    onClick={() => playGame()}
+                    disabled={playLoading}
+                  >
+                    {playLoading ? "Adding..." : "Play"}
+                  </button>
+                )}
+                {isPaid && (
+                  <button
+                    className="py-2 px-16 mb-1 mt-3 mr-3 bg-green-500 rounded baseline hover:bg-green-300 disabled:opacity-50"
+                    onClick={() => movePlayer()}
+                    disabled={moveLoading}
+                  >
+                    Move
+                  </button>
+                )}
+                {isPaid && gridData && gridData[Number(you)]?.typeGrid === "house" && (
+                  <button
+                    className="py-2 px-16 mb-1 mt-3 mr-3 bg-green-500 rounded baseline hover:bg-green-300 disabled:opacity-50"
+                    onClick={() => stealPresent()}
+                    disabled={stealLoading}
+                  >
+                    Steal
+                  </button>
+                )}
+              </div>
+            </div>
+            <div className="relative mt-2 bg-sky-400" style={{ width: "1000px", height: "600px" }}>
               {gridData &&
                 gridData.map((item, index) => (
                   <div
