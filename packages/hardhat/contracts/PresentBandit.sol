@@ -13,6 +13,7 @@ contract PresentBandit {
   mapping(address => address) public tbaList;
   mapping(address => uint256) public player;
   mapping(address => uint256) public playerTimeLeft;
+  mapping(address => uint256) public playerWeight;
   mapping(address => bool) public isPaid;
 
   event PlayEvent(address player, address nft, string detail);
@@ -63,13 +64,14 @@ contract PresentBandit {
     address tbaAddress = tbaList[msg.sender];
     player[tbaAddress] = 0;
     playerTimeLeft[tbaAddress] = 100;
+    playerWeight[tbaAddress] = 1;
     isPaid[tbaAddress] = true;
   }
 
   function movePlayer() public {
     address tbaAddress = tbaList[msg.sender];
     player[tbaAddress] += 1;
-    playerTimeLeft[tbaAddress] -= 1;
+    playerTimeLeft[tbaAddress] -= playerWeight[tbaAddress];
   }
 
   function stealPresent() public {
@@ -82,6 +84,7 @@ contract PresentBandit {
     playerTimeLeft[tbaAddress] -= timeCost + 5;
 
     presentToken.mint(tbaAddress, 1 * 10 ** 18);
+    playerWeight[tbaAddress] += 2;
   }
 
   function gameOver() public {
@@ -101,12 +104,14 @@ contract PresentBandit {
 
     if (num == 1) {
       presentToken.mint(tbaAddress, 1 * 10 ** 18);
+      playerWeight[tbaAddress] += 2;
       emit PlayEvent(msg.sender, tbaAddress, "You found a present");
     }
     else if (num == 2) {
       uint amount = presentToken.balanceOf(tbaAddress);
       if (amount > 0) {
         presentToken.burn(tbaAddress, 1 * 10 ** 18);
+        playerWeight[tbaAddress] -= 2;
         emit PlayEvent(msg.sender, tbaAddress, "You lost a present");
       }
       else {

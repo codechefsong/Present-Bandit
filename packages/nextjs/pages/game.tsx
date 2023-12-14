@@ -49,6 +49,12 @@ const Game: NextPage = () => {
     args: [tbaAddress],
   });
 
+  const { data: weight } = useScaffoldContractRead({
+    contractName: "PresentBandit",
+    functionName: "playerWeight",
+    args: [tbaAddress],
+  });
+
   const { data: isPaid } = useScaffoldContractRead({
     contractName: "PresentBandit",
     functionName: "isPaid",
@@ -113,6 +119,7 @@ const Game: NextPage = () => {
                 <p>{tbaAddress}</p>
                 <p>{Number(playerTimeLeft)} Time Left</p>
                 <p>{formatEther(presents || 0n)} Presents</p>
+                <p>Cost {Number(weight)} Mins to Move</p>
               </div>
               <div className="flex flex-col items-center justify-center rounded overflow-hidden shadow-lg bg-white">
                 {!isPaid && tbaAddress === "0x0000000000000000000000000000000000000000" && (
