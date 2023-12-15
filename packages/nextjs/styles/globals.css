@@ -115,3 +115,27 @@ p {
   top: 450px;
   left: 10px;
 }
+
+.house-1{
+  position: absolute;
+  top: 0;
+  left: 295px;
+}
+
+.house-2{
+  position: absolute;
+  top: 50px;
+  left: 810px;
+}
+
+.house-3{
+  position: absolute;
+  top: 420px;
+  left: 810px;
+}
+
+.house-4{
+  position: absolute;
+  top: 360px;
+  left: 445px;
+}

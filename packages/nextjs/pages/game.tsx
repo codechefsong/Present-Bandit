@@ -204,6 +204,10 @@ const Game: NextPage = () => {
                     )}
                   </div>
                 ))}
+              <Image className="house-1" src="/house.png" width={90} height={90} alt="House" />
+              <Image className="house-2" src="/house.png" width={90} height={90} alt="House" />
+              <Image className="house-3" src="/house.png" width={90} height={90} alt="House" />
+              <Image className="house-4" src="/house.png" width={90} height={90} alt="House" />
             </div>
           </div>
         </div>
