@@ -63,15 +63,20 @@ contract PresentBandit {
   function addPlayer() public {
     address tbaAddress = tbaList[msg.sender];
     player[tbaAddress] = 0;
-    playerTimeLeft[tbaAddress] = 100;
+    playerTimeLeft[tbaAddress] = 50;
     playerWeight[tbaAddress] = 1;
     isPaid[tbaAddress] = true;
   }
 
   function movePlayer() public {
     address tbaAddress = tbaList[msg.sender];
-    player[tbaAddress] += 1;
-    playerTimeLeft[tbaAddress] -= playerWeight[tbaAddress];
+    if (playerTimeLeft[tbaAddress] < playerWeight[tbaAddress]) {
+      playerTimeLeft[tbaAddress] = 0;
+    }
+    else {
+      player[tbaAddress] += 1;
+      playerTimeLeft[tbaAddress] -= playerWeight[tbaAddress];
+    }
   }
 
   function stealPresent() public {
@@ -81,10 +86,15 @@ contract PresentBandit {
 
     uint256 timeCost = randomNumber(15);
 
-    playerTimeLeft[tbaAddress] -= timeCost + 5;
+    if (playerTimeLeft[tbaAddress] < timeCost + 5) {
+      playerTimeLeft[tbaAddress] = 0;
+    }
+    else {
+      playerTimeLeft[tbaAddress] -= timeCost + 5;
 
-    presentToken.mint(tbaAddress, 1 * 10 ** 18);
-    playerWeight[tbaAddress] += 2;
+      presentToken.mint(tbaAddress, 1 * 10 ** 18);
+      playerWeight[tbaAddress] += 2;
+    }
   }
 
   function dropPresent() public {
@@ -102,7 +112,7 @@ contract PresentBandit {
 
     uint amount = presentToken.balanceOf(tbaAddress);
 
-    presentToken.burn(tbaAddress, amount * 10 ** 18);
+    presentToken.burn(tbaAddress, amount);
 
     isPaid[tbaAddress] = false;
   }
@@ -129,7 +139,12 @@ contract PresentBandit {
       }
     }
     else if (num == 3) {
-      playerTimeLeft[tbaAddress] -= 10;
+      if (playerTimeLeft[tbaAddress] < 10) {
+        playerTimeLeft[tbaAddress] = 0;
+      }
+      else {
+        playerTimeLeft[tbaAddress] -= 10;
+      }
       emit PlayEvent(msg.sender, tbaAddress, "You were delay because of snow storm");
     }
     else {
