@@ -19,7 +19,7 @@ contract PresentBandit {
   event PlayEvent(address player, address nft, string detail);
 
   // 0 - home
-  // 1 - finsh
+  // 1 - finish
   // 2 - house
   // 3 - event
   struct Box {
@@ -41,7 +41,7 @@ contract PresentBandit {
       else grid.push(Box(id, "empty", 99));
     }
 
-    grid.push(Box(14, "finsh", 1));
+    grid.push(Box(14, "finish", 1));
   }
 
   function getGrid() public view returns (Box[] memory){

@@ -88,31 +88,31 @@ p {
 
 .grid-10 {
   position: absolute;
-  top: 450px;
+  top: 470px;
   left: 600px;
 }
 
 .grid-11 {
   position: absolute;
-  top: 450px;
+  top: 470px;
   left: 450px;
 }
 
 .grid-12 {
   position: absolute;
-  top: 450px;
+  top: 470px;
   left: 300px;
 }
 
 .grid-13 {
   position: absolute;
-  top: 450px;
+  top: 470px;
   left: 150px;
 }
 
 .grid-14 {
   position: absolute;
-  top: 450px;
+  top: 470px;
   left: 10px;
 }
 
@@ -136,6 +136,27 @@ p {
 
 .house-4{
   position: absolute;
-  top: 360px;
+  top: 380px;
   left: 445px;
 }
+
+.line-1{
+  position: absolute;
+  top: 95px;
+  left: 10px;
+}
+
+.line-2{
+  position: absolute;
+  top: 95px;
+  left: 755px;
+}
+
+.line-3{
+  position: absolute;
+  top: 475px;
+  left: 10px;
+}
+
+
+.zindex-10{ z-index: 10; }

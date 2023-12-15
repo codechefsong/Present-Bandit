@@ -189,13 +189,13 @@ const Game: NextPage = () => {
                 )}
               </div>
             </div>
-            <div className="relative mt-2 bg-sky-400" style={{ width: "1000px", height: "600px" }}>
+            <div className="relative mt-2 bg-white-100" style={{ width: "1000px", height: "600px" }}>
               {gridData &&
                 gridData.map((item, index) => (
                   <div
                     key={index}
                     className={
-                      "w-20 h-20 border border-gray-300 font-bold bg-white" + " " + BOARD_STYLES[index] || "grid-1"
+                      "w-20 h-20 z-20 border border-gray-300 font-bold bg-white" + " " + BOARD_STYLES[index] || "grid-1"
                     }
                   >
                     {item.typeGrid}
@@ -204,10 +204,13 @@ const Game: NextPage = () => {
                     )}
                   </div>
                 ))}
-              <Image className="house-1" src="/house.png" width={90} height={90} alt="House" />
-              <Image className="house-2" src="/house.png" width={90} height={90} alt="House" />
-              <Image className="house-3" src="/house.png" width={90} height={90} alt="House" />
-              <Image className="house-4" src="/house.png" width={90} height={90} alt="House" />
+              <Image className="house-1 z-30" src="/house.png" width={90} height={90} alt="House" />
+              <Image className="house-2 z-30" src="/house.png" width={90} height={90} alt="House" />
+              <Image className="house-3 z-30" src="/house.png" width={90} height={90} alt="House" />
+              <Image className="house-4 z-30" src="/house.png" width={90} height={90} alt="House" />
+              <div className="line-1 bg-blue-100 w-[800px] h-[70px] z-10"></div>
+              <div className="line-2 bg-blue-100 w-[70px] h-[450px] z-10"></div>
+              <div className="line-3 bg-blue-100 w-[800px] h-[70px] z-10"></div>
             </div>
           </div>
         </div>
