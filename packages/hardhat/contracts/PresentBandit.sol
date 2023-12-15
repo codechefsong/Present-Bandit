@@ -38,7 +38,7 @@ contract PresentBandit {
     for (uint256 id = 1; id < 13; id++) {
       if (id == 2 || id == 5|| id == 8 || id == 10) grid.push(Box(id, "house", 2));
       else if (id == 3 || id == 7 ) grid.push(Box(id, "event", 3));
-      else grid.push(Box(id, "empty", 99));
+      else grid.push(Box(id, "", 99));
     }
 
     grid.push(Box(14, "finish", 1));

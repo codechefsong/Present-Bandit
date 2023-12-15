@@ -107,6 +107,14 @@ const Game: NextPage = () => {
     },
   });
 
+  const { writeAsync: gameOver, isLoading: overLoading } = useScaffoldContractWrite({
+    contractName: "PresentBandit",
+    functionName: "gameOver",
+    onBlockConfirmation: txnReceipt => {
+      console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+    },
+  });
+
   useScaffoldEventSubscriber({
     contractName: "PresentBandit",
     eventName: "PlayEvent",
@@ -181,8 +189,8 @@ const Game: NextPage = () => {
                 {isPaid && Number(playerTimeLeft) == 0 && (
                   <button
                     className="py-2 px-16 mb-1 mt-3 mr-3 bg-green-500 rounded baseline hover:bg-green-300 disabled:opacity-50"
-                    onClick={() => movePlayer()}
-                    disabled={moveLoading}
+                    onClick={() => gameOver()}
+                    disabled={overLoading}
                   >
                     Start Over
                   </button>
