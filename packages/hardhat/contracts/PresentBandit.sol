@@ -63,7 +63,7 @@ contract PresentBandit {
   function addPlayer() public {
     address tbaAddress = tbaList[msg.sender];
     player[tbaAddress] = 0;
-    playerTimeLeft[tbaAddress] = 50;
+    playerTimeLeft[tbaAddress] = 100;
     playerWeight[tbaAddress] = 1;
     isPaid[tbaAddress] = true;
   }
